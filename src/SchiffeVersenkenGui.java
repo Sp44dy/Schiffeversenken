@@ -57,34 +57,47 @@ public class SchiffeVersenkenGui {
 	 */
 	private JPanel initSpielfeld1() {
 		JPanel ret = new JPanel();
+		// Hauptpannel Spielfeld 1
 		spielfeld1Anordnung = new JPanel[11];
+		// Textfelder für Label
 		spielfeld1text = new JLabel[20];
+		//Buttons für das Spielfeld
 		spielfeld1Button = new JButton[10][10];
+		
+		// Panel initialisieren
 		for(int i=0;i<11;i++) {
 			spielfeld1Anordnung[i] = new JPanel();
 		}
+		// Labels initialisieren
 		for(int i=0;i<20;i++) {
 			spielfeld1text[i] = new JLabel();
 		}
+		// Pannel vertikal definieren
 		for(int i=0;i<10;i++) {
 			spielfeld1Anordnung[i].setLayout(
 				new BoxLayout(
 						spielfeld1Anordnung[i],BoxLayout.PAGE_AXIS));
 			spielfeld1Anordnung[i].add(Box.createRigidArea(new Dimension(0,10)));
 		}
+		
+		// Das Label oben in der Ecke hat keinen text
 		spielfeld1Anordnung[0].add(new JLabel("<html><br/></html>"));
+		
+		// Vertikale "rechte" Labels erstellen
 		for(int i=11;i<20;i++) {
-			spielfeld1text[i].setText("<html><br/>" + String.valueOf(i-10) + "</html>");
+			spielfeld1text[i].setText("<html><br>" + String.valueOf(i-10) + "</html>");
 			spielfeld1Anordnung[0].add(spielfeld1text[i]);
 		}
+		
 		for(int i=1;i<10;i++) {
 			for(int j=0;j<10;j++) {
 				if(j==0) {
-					spielfeld1text[i].setText("    " + String.valueOf(i));
+					// Spielfeld Koordinaten setzen
+					spielfeld1text[i].setText(" " + String.valueOf(i));
 					spielfeld1Anordnung[i].add(spielfeld1text[i]);
 				}
+				// Spiel Buttons definieren
 				spielfeld1Button[i][j] = new JButton("X");
-				//spielfeld1Button[i][j].setPreferredSize(new Dimension(60, 60));
 				spielfeld1Anordnung[i].add(spielfeld1Button[i][j]);
 			}
 		}
@@ -141,12 +154,12 @@ public class SchiffeVersenkenGui {
 		
 		//this.frame.add(initSpielfeld1());
 		
-		JPanel spielfeld = new JPanel();
+				JPanel spielfeld = new JPanel();
 		spielfeld.setLayout(new BorderLayout(10,0));
-		spielfeld.add(new JSeparator(JSeparator.HORIZONTAL),BorderLayout.PAGE_START);
+		//spielfeld.add(new JSeparator(JSeparator.HORIZONTAL),BorderLayout.PAGE_START);
 		spielfeld.add(initSpielfeld1(),BorderLayout.LINE_START);
-		spielfeld.add(new JSeparator(JSeparator.VERTICAL),BorderLayout.CENTER);
-		spielfeld.add(initSpielfeld2(),BorderLayout.LINE_END);
+		//spielfeld.add(new JSeparator(JSeparator.VERTICAL),BorderLayout.CENTER);
+		//spielfeld.add(initSpielfeld2(),BorderLayout.LINE_END);
 		this.frame.add(spielfeld);
 		
 		this.frame.pack();
