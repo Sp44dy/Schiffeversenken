@@ -12,7 +12,6 @@ public class SchiffeversenkenClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, InterruptedException {
 		Registry registry  = LocateRegistry.getRegistry("localhost", Constant.RMI_PORT);
 		TestRemote remote = (TestRemote)registry.lookup(Constant.RMI_ID);
-		
 		Spielfeld2d sp = new Spielfeld2d() ;
 		//spieler "anmelden"
 		sp.setSpielerNummer(remote.registerNewPlayer());

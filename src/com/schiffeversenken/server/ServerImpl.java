@@ -9,7 +9,12 @@ import java.util.ArrayList;
 /*
  * 
  */
+
 public class ServerImpl extends UnicastRemoteObject implements TestRemote {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 30062015L;
 	/*
 	 * 
 	 */
@@ -29,15 +34,11 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	/**
 	 * 
 	 */
-	private int[][] spielfeld1 = new int[11][11];
+	private int [][] spielfeld1;
 	/**
 	 * 
 	 */
-	private int[][] spielfeld2 = new int[11][11];
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private int [][] spielfeld2;
 	/**
 	 * 
 	 */
@@ -46,7 +47,6 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	 * 
 	 */
 	private int spieler;
-	
 	/**
 	 * 
 	 * @param ship
@@ -56,9 +56,9 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	@Override
 	public void setShips(ArrayList<Point> ship,int spieler) throws RemoteException {
 		if(spieler==1) {
-			ships1=ship;
+			ships1 = ship;
 		} else {
-			ships2=ship;
+			ships2 = ship;
 		}
 		calcSpielfeld(spieler);
 	}
@@ -68,40 +68,35 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	 */
 	protected ServerImpl() throws RemoteException {
 		super();
-		runde = -1;
-		this.spieler1 = new ArrayList<Point>();
-		this.spieler2 = new ArrayList<Point>();
+		runde = 0;
 	}
 
 	
 	/**
 	 * 
 	 * @param spieler
+	 * @param gameID
 	 */
 	private void calcSpielfeld(int spieler) {
-		spielfeld1 = new int[11][11];
-		spielfeld2 = new int[11][11];
-		
-			for (Point p : spieler1) {
-				if (ships2.contains(p)) {
-					spielfeld1[p.x][p.y] = 2;
-				} else {
-					spielfeld1[p.x][p.y] = 1;
-				}
+		spielfeld1 = new int[10][10];
+		spielfeld2 = new int[10][10];
+		for (Point p : spieler1) {
+			if (ships2.contains(p)) {
+				spielfeld1[p.x][p.y] = 2;
+			} else {
+				spielfeld1[p.x][p.y] = 1;
 			}
-			for (Point p : spieler2) {
-				if (ships1.contains(p)) {
-					spielfeld2[p.x][p.y] = 2;
-				} else {
-					spielfeld2[p.x][p.y] = 1;
-				}
+		}
+		for (Point p : spieler2) {
+			if (ships1.contains(p)) {
+				spielfeld2[p.x][p.y] = 2;
+			} else {
+				spielfeld2[p.x][p.y] = 1;
 			}
+		}
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
+	
 	@Override
 	public int getNextPlayer() throws RemoteException {
 		if (runde % 2 == 0) {
@@ -111,9 +106,7 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 		}
 	}
 
-	/**
-	 * 
-	 */
+	
 	@Override
 	public int[][][] doSpielzug(Point spielzug, int player)
 			throws RemoteException {
@@ -126,9 +119,9 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 		calcSpielfeld(player);
 		return getSpielzuege(player);
 	}
-	/*
-	 * (non-Javadoc)
-	 * @see com.schiffeversenken.interf.TestRemote#getSpielzuege(int)
+	/**
+	 * 
+	 * 
 	 */
 	@Override
 	public int[][][] getSpielzuege(int player) throws RemoteException {
@@ -159,30 +152,39 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 
 	@Override
 	public int gewonnen() throws RemoteException {
-		/**
-		for (Point p : spieler1) {
-			if (ships2.contains(p)) {
-				spielfeld1[p.x][p.y] = 2;
-			} else {
-				spielfeld1[p.x][p.y] = 1;
+		int cntSpieler=0;
+		int cnt=0;
+		for (Point p : ships2) {
+			cnt++;
+			if (spieler1.contains(p)) {
+				cntSpieler++;
 			}
 		}
+		if(cnt==cntSpieler) {
+			return 1;
+		}
+		cnt = 0;
+		cntSpieler=0;
 		for (Point p : spieler2) {
 			if (ships1.contains(p)) {
-				spielfeld2[p.x][p.y] = 2;
-			} else {
-				spielfeld2[p.x][p.y] = 1;
+				cntSpieler++;
 			}
 		}
-		 **/
+		if(cnt==cntSpieler) {
+			return 1;
+		} else {
+			return 0;
+		}
 		
-		return 0;
 	}
 	@Override
 	public boolean gameReady() throws RemoteException {
-		if(spieler==2) 
-			return true;
-		else 
-			return false;
+		// TODO Auto-generated method stub
+		return false;
 	}
+	
+	public int startNewGame() {
+		return 0;
+	}
+
 }
