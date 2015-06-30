@@ -11,7 +11,7 @@ public interface TestRemote extends Remote {
 	/*
 	 * 
 	 */
-	public int getNextPlayer() throws RemoteException;
+	public int getNextPlayer( ) throws RemoteException;
 	/*
 	 * 
 	 */
