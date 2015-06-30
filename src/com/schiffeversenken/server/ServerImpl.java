@@ -68,6 +68,8 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	 */
 	protected ServerImpl() throws RemoteException {
 		super();
+		spieler1 = new ArrayList<Point>();
+		spieler2 = new ArrayList<Point>();
 		runde = 0;
 	}
 
@@ -78,23 +80,25 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	 * @param gameID
 	 */
 	private void calcSpielfeld(int spieler) {
-		spielfeld1 = new int[10][10];
-		spielfeld2 = new int[10][10];
-		for (Point p : spieler1) {
-			if (ships2.contains(p)) {
-				spielfeld1[p.x][p.y] = 2;
-			} else {
-				spielfeld1[p.x][p.y] = 1;
-			}
-		}
-		for (Point p : spieler2) {
-			if (ships1.contains(p)) {
-				spielfeld2[p.x][p.y] = 2;
-			} else {
-				spielfeld2[p.x][p.y] = 1;
-			}
-		}
-	}
+	
+					spielfeld1 = new int[11][11];
+					spielfeld2 = new int[11][11];
+					
+						for (Point p : spieler1) {
+							if (ships2.contains(p)) {
+								spielfeld1[p.x][p.y] = 2;
+							} else {
+							spielfeld1[p.x][p.y] = 1;
+							}
+						}
+						for (Point p : spieler2) {
+							if (ships1.contains(p)) {
+								spielfeld2[p.x][p.y] = 2;
+							} else {
+								spielfeld2[p.x][p.y] = 1;
+							}
+						}
+				}
 
 	
 	@Override
@@ -141,17 +145,23 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 	 */
 	@Override
 	public boolean gameStarted() throws RemoteException {
-		return (runde > 0) ? true : false;
+		if(ships1 != null && ships2 != null) 
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public int registerNewPlayer() throws RemoteException {
+		if(spieler==2)
+			return -1;
 		spieler++;
 		return spieler;
 	}
 
 	@Override
 	public int gewonnen() throws RemoteException {
+
 		int cntSpieler=0;
 		int cnt=0;
 		for (Point p : ships2) {
@@ -165,22 +175,25 @@ public class ServerImpl extends UnicastRemoteObject implements TestRemote {
 		}
 		cnt = 0;
 		cntSpieler=0;
-		for (Point p : spieler2) {
-			if (ships1.contains(p)) {
+		for (Point p : ships1) {
+			cnt++;
+			if (spieler2.contains(p)) {
 				cntSpieler++;
 			}
 		}
 		if(cnt==cntSpieler) {
-			return 1;
+			return 2;
 		} else {
 			return 0;
 		}
-		
+	
 	}
 	@Override
 	public boolean gameReady() throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		if ( spieler == 2) 
+			return true;
+		else 
+			return false;
 	}
 	
 	public int startNewGame() {
