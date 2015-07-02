@@ -3,79 +3,144 @@ package com.schiffeversenken.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-
+/**
+ * 
+ * @author Benedict Kohls <bkohls91@gmail.com>
+ * @author Patrick Labisch <paul.florian09@gmail.com>
+ *
+ */
 public class Spielfeld2d extends Frame {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 10L;
 	/**
 	 * Für die Berechnung des Spielfeldes
+	 * Startpositionen für das Spielfeld
 	 */
 	protected int startX = 60;
 	protected int startY = 90;
+	/**
+	 * Endpositionnen des Spielfeldes
+	 */
 	protected int endY = 390;
 	protected int endX = 360;
+	/**
+	 * Letzte Maus Positionen
+	 */
 	protected int lastX = 0;
 	protected int lastY = 0;
 	/**
-	 * 
+	 * Anzahl der Spieler
 	 */
 	protected short spieler;
 	/**
-	 * Spielfeld als Array
+	 * Linkes Spielfeld als Array
 	 */
 	private int spielfeld1[][];
+	/**
+	 * Rechtes Spielfeld as Array
+	 */
 	private int spielfeld2[][];
 	/**
-	 * 
+	 * Spielzüge für das Linke Spielfeld
 	 */
 	private ArrayList<Point> spielzuege1;
+	/**
+	 * Spielzüge für das Rechte Spielfeld
+	 */
 	private ArrayList<Point> spielzuege2;
+	/**
+	 * Nummer des Spielers
+	 */
 	private int spielerNummer;
+	/**
+	 * Erlauben iob Schiffe gesetzen werden dürfen
+	 */
 	public boolean setzeSchiffe;
+	/**
+	 * Die gesetzen Schiffe
+	 */
 	public ArrayList<Point> gesetzeSchiffe;
+	/**
+	 * Anzahl der gesetzen Schiffe
+	 */
 	private int anzahlschiffe;
+	/**
+	 * Erlauben ob der Spieler einen Spielzug machen darf
+	 */
 	public boolean allowSpielzug;
+	/**
+	 * Der aktuelle Spielzug
+	 */
 	private Point spielzug;
+	/**
+	 * Drehen beim Schiffe setzen
+	 */
 	private boolean drehen;
+	/**
+	 * Ob der Spielzug fertig ist
+	 */
 	private boolean spielzugdone;
-	private int ships[] = new int[] { 5, 4, 3, 2, 2, 1, 1, 1 };
+	/**
+	 * Schiffe welche gesetz werden können
+	 */
+	private final int ships[] = new int[] { 5, 4, 3, 2, 2, 1, 1, 1 };
+	/**
+	 * Ob Schiffe gesetzt werden
+	 */
 	private boolean settingships = false;
-
+	/**
+	 * Konstruktor für das Spielfeld.
+	 * Dieser initalisiert alle Arrays und
+	 * ArrayList-Variabeln, sowie erstellt alle nötigen
+	 * Listener die für die Gui benötigt werden.
+	 */
 	public Spielfeld2d() {
-
+		// Konstruktor des Frames
 		super("Schiffeversenken");
-		// super.paintComponents(this.getGraphics());
+		// Spielfeld Array initalisieren
 		spielfeld1 = new int[11][11];
 		spielfeld2 = new int[11][11];
+		// ArrayListen initalisieren
 		spielzuege1 = new ArrayList<Point>();
-		setSpielzuege2(new ArrayList<Point>());
-		// fakeZuege();
-		// Set the size for this frame.
+		spielzuege2= new ArrayList<Point>();
+		// Fenser auf 800x425 setzen
 		setSize(800, 425);
+		
 		allowSpielzug = false;
-		setSpielzugdone(false);
+		spielzugdone = false;
 		gesetzeSchiffe = new ArrayList<Point>();
-		// We need to turn on the visibility of our frame
-		// by setting the Visible parameter to true.
+		// Gui zeigen
 		setVisible(true);
+		/**
+		 * Hover für das Spielfeld
+		 * @see paintSelection(int,int)
+		 */
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				paintSelection(e.getX(), e.getY());
 			}
 		});
+		/**
+		 * Listener für die Drehung beim Schiffe setzen
+		 */
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D'/** D-Taste **/
 				) {
+					// Wert für die drehen Variable ändern
 					drehen = (drehen == false) ? true : false;
+					//gui neumalen
 					repaint();
 				}
 			}
 		});
+		/**
+		 * 
+		 */
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -86,23 +151,23 @@ public class Spielfeld2d extends Frame {
 				}
 			}
 		});
-		// Now, we want to be sure we properly dispose of resources
-		// this frame is using when the window is closed. We use
-		// an anonymous inner class adapter for this.
+		/**
+		 * Listener für das Fenster schließen
+		 */
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
 				System.exit(0);
 			}
 		});
-
-		paintSpielfeld();
-		startPlaceingShips();
+		
 	}
-
+	/**
+	 * 
+	 */
 	public void startPlaceingShips() {
 		setzeSchiffe = true;
-		anzahlschiffe = 8;
+		anzahlschiffe = ships.length;
 	}
 
 	/**
@@ -180,15 +245,23 @@ public class Spielfeld2d extends Frame {
 			// Spielfeld 2 hover
 		}
 	}
-
+	/**
+	 * 
+	 * @param p
+	 */
 	public void setSpielzuege1(int p[][]) {
 		this.spielfeld1 = p;
 	}
-
+	/**
+	 * 
+	 * @param p
+	 */
 	public void setSpielzuege2(int p[][]) {
 		this.spielfeld2 = p;
 	}
-
+	/**
+	 * 
+	 */
 	public void spielzugeInArray() {
 		/**
 		 * spielfeld1 = new int[11][11];
@@ -198,7 +271,11 @@ public class Spielfeld2d extends Frame {
 		 * spielfeld2[p.x][p.y] = 1; }
 		 **/
 	}
-
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	public void paintSelection(int x, int y) {
 		if (x > 60 && x < 360 && y > 90 && y < 390) {
 			int posX = Math.floorDiv(x, 30);
@@ -231,7 +308,10 @@ public class Spielfeld2d extends Frame {
 		}
 		//
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.Window#paint(java.awt.Graphics)
+	 */
 	public void paint(Graphics g) {
 		spielzugeInArray();
 		// Beschriftungen etc
@@ -426,46 +506,75 @@ public class Spielfeld2d extends Frame {
 
 	}
 
-	public void paintSpielfeld() {
-
-	}
-
+	
+	/**
+	 * 
+	 * @return ArrayList<Point>
+	 */
 	public ArrayList<Point> getSpielzuege2() {
 		return spielzuege2;
 	}
-
+	/**
+	 * 
+	 * @param spielzuege2
+	 */
 	public void setSpielzuege2(ArrayList<Point> spielzuege2) {
 		this.spielzuege2 = spielzuege2;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public int getSpielerNummer() {
 		return spielerNummer;
 	}
-
+	/**
+	 * 
+	 * @param spielerNummer
+	 */
 	public void setSpielerNummer(int spielerNummer) {
 		this.spielerNummer = spielerNummer;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public Point getSpielzug() {
 		return spielzug;
 	}
-
+	/**
+	 * 
+	 * @param spielzug
+	 */
 	public void setSpielzug(Point spielzug) {
 		this.spielzug = spielzug;
 	}
-
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public boolean isSpielzugdone() {
 		return spielzugdone;
 	}
-
+	/**
+	 * 
+	 * @param spielzugdone
+	 */
 	public void setSpielzugdone(boolean spielzugdone) {
 		this.spielzugdone = spielzugdone;
 	}
-
+	/**
+	 * 
+	 * @return boolean 
+	 */
 	public boolean isSettingships() {
 		return settingships;
 	}
-
+	/**
+	 * 
+	 * @param settingships
+	 * @return void
+	 */
 	public void setSettingships(boolean settingships) {
 		this.settingships = settingships;
 	}

@@ -1,9 +1,13 @@
 package server;
 
 import java.rmi.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.*;
 import java.net.*;
 import java.util.*;
+
+import com.schiffeversenken.interf.Constant;
 
 import remoteinterface.ChatException;
 import remoteinterface.RMIClientInterface;
@@ -27,10 +31,12 @@ public class RMIServerImpl3 extends UnicastRemoteObject
 
    public RMIServerImpl3() throws RemoteException
    {
+	
       String bindURL = null;
       try
       {
-         bindURL = "rmi://" + HOST + "/" + SERVICE_NAME;
+         bindURL = "rmi://" + HOST + "/" + RMIServerImpl3.SERVICE_NAME;
+ 
          Naming.rebind (bindURL, this);
 
          clients = new Vector<RMIClientInterface>();
@@ -43,6 +49,8 @@ public class RMIServerImpl3 extends UnicastRemoteObject
          System.out.println ("Ungueltige URL: " + bindURL);
          System.out.println (e.getMessage());
          System.exit (1);
+      } catch( Exception e ) {
+    	  e.printStackTrace();
       }
    }
 
