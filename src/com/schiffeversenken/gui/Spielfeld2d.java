@@ -4,31 +4,38 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 /**
+ * Die Klasse ist für die Auswertung der Server Daten und 
+ * das Zeichnen der Gui verantwortlich.
  * 
- * @author Benedict Kohls <bkohls91@gmail.com>
- * @author Patrick Labisch <paul.florian09@gmail.com>
+ * @author Benedict Kohls  {@literal <bkohls91@gmail.com>}
+ * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
  *
  */
+@SuppressWarnings("serial")
 public class Spielfeld2d extends Frame {
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 10L;
-	/**
-	 * Für die Berechnung des Spielfeldes
-	 * Startpositionen für das Spielfeld
+	 * Start X-Position fuer das Zeichnen
 	 */
 	protected int startX = 60;
+	/**
+	 * Start Y-Position fuer das Zeichnen
+	 */
 	protected int startY = 90;
 	/**
-	 * Endpositionnen des Spielfeldes
+	 * End Y-Position fuer das Zeichnen
 	 */
 	protected int endY = 390;
+	/**
+	 * End X-Position fuer das Zeichnen
+	 */
 	protected int endX = 360;
 	/**
-	 * Letzte Maus Positionen
+	 * Letzte X-Position der Maus
 	 */
 	protected int lastX = 0;
+	/**
+	 * Letzte Y-Position der Maus
+	 */
 	protected int lastY = 0;
 	/**
 	 * Anzahl der Spieler
@@ -95,6 +102,8 @@ public class Spielfeld2d extends Frame {
 	 * Dieser initalisiert alle Arrays und
 	 * ArrayList-Variabeln, sowie erstellt alle nötigen
 	 * Listener die für die Gui benötigt werden.
+	 * @param none
+	 * @return none
 	 */
 	public Spielfeld2d() {
 		// Konstruktor des Frames
@@ -163,7 +172,8 @@ public class Spielfeld2d extends Frame {
 		
 	}
 	/**
-	 * 
+	 * Diese Funktion erlaubt es dem Client schiffe
+	 * zu setzen
 	 */
 	public void startPlaceingShips() {
 		setzeSchiffe = true;
@@ -171,11 +181,11 @@ public class Spielfeld2d extends Frame {
 	}
 
 	/**
-	 * 
-	 * @param x
-	 * @param y
+	 * Diese Funktion setzt Schiffe auf dem Spielfeld
+	 * @param x X-Mausposition
+	 * @param y Y-Mausposition
 	 */
-	public void setShips(int x, int y) {
+	private void setShips(int x, int y) {
 		if (x > 450 && x < 750 && y > 90 && y < 390) {
 			int posX = Math.floorDiv(x - 450, 30);
 			int posY = Math.floorDiv(y - 90, 30);
@@ -237,12 +247,8 @@ public class Spielfeld2d extends Frame {
 				setSpielzug(new Point(posX, posY));
 				setSpielzugdone(true);
 				spielzuege1.add(new Point(posX, posY));
-				// System.out.println("added");
 				this.repaint();
-				// super.paintComponents(this.getGraphics());
 			}
-			// System.out.println(posX + "=" + posY);
-			// Spielfeld 2 hover
 		}
 	}
 	/**

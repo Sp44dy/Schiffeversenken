@@ -16,8 +16,8 @@ import com.schiffeversenken.interf.*;
  * ist auch für die Verbindung mit dem RMI-Server zuständig.
  * 
  * 
- * @author Benedict Kohls <bkohls91@gmail.com>
- * @author Patrick Labisch <paul.florian09@gmail.com>
+ * @author Benedict Kohls  {@literal <bkohls91@gmail.com>}
+ * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
  * 
  *
  */

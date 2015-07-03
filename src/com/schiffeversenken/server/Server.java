@@ -9,8 +9,9 @@ import com.schiffeversenken.interf.*;
 
 /**
  * 
- * @author Benedict Kohls <bkohls91@gmail.com>
- * @author Patrick Labisch <paul.florian09@gmail.com>
+ * 
+ * @author Benedict Kohls  {@literal <bkohls91@gmail.com>}
+ * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
  *
  */
 public class Server {

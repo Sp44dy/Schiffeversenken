@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 /**
  * 
- * @author Benedict Kohls <bkohls91@gmail.com>
- * @author Patrick Labisch <paul.florian09@gmail.com>
+ * @author Benedict Kohls  {@literal <bkohls91@gmail.com>}
+ * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
  *
  */
 public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
