@@ -120,21 +120,17 @@ public class Spielfeld2d extends Frame {
 		allowSpielzug = false;
 		spielzugdone = false;
 		gesetzeSchiffe = new ArrayList<Point>();
+		
 		// Gui zeigen
 		setVisible(true);
-		/**
-		 * Hover für das Spielfeld
-		 * @see paintSelection(int,int)
-		 */
+		// Hover für das Spielfeld
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				paintSelection(e.getX(), e.getY());
 			}
 		});
-		/**
-		 * Listener für die Drehung beim Schiffe setzen
-		 */
+		// Listener für die Drehung beim Schiffe setzen
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -147,9 +143,7 @@ public class Spielfeld2d extends Frame {
 				}
 			}
 		});
-		/**
-		 * 
-		 */
+		// Maus Klick für das Schiffe setzen
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -160,9 +154,7 @@ public class Spielfeld2d extends Frame {
 				}
 			}
 		});
-		/**
-		 * Listener für das Fenster schließen
-		 */
+		// Listener für das Fenster schließen
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
@@ -181,20 +173,26 @@ public class Spielfeld2d extends Frame {
 	}
 
 	/**
-	 * Diese Funktion setzt Schiffe auf dem Spielfeld
+	 * Diese Funktion setzt Schiffe auf dem Spielfeld.
+	 * 
 	 * @param x X-Mausposition
 	 * @param y Y-Mausposition
 	 */
 	private void setShips(int x, int y) {
+		// Innerhalb des 1. Spielfeldes
 		if (x > 450 && x < 750 && y > 90 && y < 390) {
+			//Position auf dem Spielfeld ermitteln
 			int posX = Math.floorDiv(x - 450, 30);
 			int posY = Math.floorDiv(y - 90, 30);
+			// Wie "lang" ist das Schiff
 			int anzahl = ships[anzahlschiffe - 1];
-			System.out.println(anzahl);
-			// kontrolle ob nicht bereits in Liste
+			// kontrolle ob der Punkt wo das Schiff gesetzt wird
+			// nicht bereits in Liste ist. Ansonsten funktion beeneden.
+			// Einmal für die drehung (vertikal) und einmal ohne (horizontal)
 			if (drehen) {
 				if (posX + anzahl <= 10) {
 					for (int l = 0; l < anzahl; l++) {
+						// kontrolle ob nicht bereits in Liste
 						if (gesetzeSchiffe.contains(new Point(posX + l, posY)))
 							return;
 					}
@@ -204,6 +202,7 @@ public class Spielfeld2d extends Frame {
 			} else {
 				if (posY + anzahl <= 10) {
 					for (int l = 0; l < anzahl; l++) {
+						// kontrolle ob nicht bereits in Liste
 						if (gesetzeSchiffe.contains(new Point(posX, posY + l)))
 							return;
 					}
@@ -211,6 +210,8 @@ public class Spielfeld2d extends Frame {
 					return;
 				}
 			}
+			
+			// Wenn das Schiff gesetzt werden kann setze es.
 			if (drehen) {
 				if (posX + anzahl <= 10) {
 					for (int l = 0; l < anzahl; l++) {
@@ -224,16 +225,20 @@ public class Spielfeld2d extends Frame {
 					}
 				}
 			}
+			// Gesetzte Schiffe reduzieren.
 			anzahlschiffe--;
+			// Wenn alle Schiffe gesetzt wurden dann "beende" das Schiffe setzen.
 			if (anzahlschiffe == 0) {
 				setzeSchiffe = false;
 			}
+			// Dannach neu malen damit der User die änderungen gleich sieht!
 			this.repaint();
 
 		}
 	}
 
 	/**
+	 * 
 	 * 
 	 * @param x
 	 * @param y
