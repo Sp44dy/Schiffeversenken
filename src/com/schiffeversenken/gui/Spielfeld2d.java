@@ -2,12 +2,21 @@ package com.schiffeversenken.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import com.schiffeversenken.interf.ServerInterface;
+
 /**
- * Die Klasse ist für die Auswertung der Server Daten und 
- * das Zeichnen der Gui verantwortlich.
+ * Die Klasse ist für die Auswertung der Server Daten und das Zeichnen der Gui
+ * verantwortlich.
  * 
- * @author Benedict Kohls  {@literal <bkohls91@gmail.com>}
+ * @author Benedict Kohls {@literal <bkohls91@gmail.com>}
  * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
  *
  */
@@ -96,16 +105,35 @@ public class Spielfeld2d extends Frame {
 	/**
 	 * Ob Schiffe gesetzt werden
 	 */
+
 	private boolean settingships = false;
 	/**
-	 * Konstruktor für das Spielfeld.
-	 * Dieser initalisiert alle Arrays und
-	 * ArrayList-Variabeln, sowie erstellt alle nötigen
-	 * Listener die für die Gui benötigt werden.
+	 * 
+	 */
+	private JTextArea chatArea = new JTextArea();
+	/**
+	 * 
+	 */
+	private JButton chatSenden = new JButton("Abesenden");
+	/**
+     * 
+     */
+	private JTextArea chatSendenArea = new JTextArea();
+	/**
+	 * 
+	 */
+	public ArrayList<String> chatNachrichten = new ArrayList<String>();
+	
+	private ServerInterface remote = null;
+	/**
+	 * Konstruktor für das Spielfeld. Dieser initalisiert alle Arrays und
+	 * ArrayList-Variabeln, sowie erstellt alle nötigen Listener die für die Gui
+	 * benötigt werden.
+	 * 
 	 * @param none
 	 * @return none
 	 */
-	public Spielfeld2d() {
+	public Spielfeld2d(ServerInterface rem) {
 		// Konstruktor des Frames
 		super("Schiffeversenken");
 		// Spielfeld Array initalisieren
@@ -113,14 +141,14 @@ public class Spielfeld2d extends Frame {
 		spielfeld2 = new int[11][11];
 		// ArrayListen initalisieren
 		spielzuege1 = new ArrayList<Point>();
-		spielzuege2= new ArrayList<Point>();
+		spielzuege2 = new ArrayList<Point>();
 		// Fenser auf 800x425 setzen
-		setSize(800, 425);
-		
+		setSize(1150, 425);
+
 		allowSpielzug = false;
 		spielzugdone = false;
 		gesetzeSchiffe = new ArrayList<Point>();
-		
+		this.remote = rem;
 		// Gui zeigen
 		setVisible(true);
 		// Hover für das Spielfeld
@@ -138,7 +166,7 @@ public class Spielfeld2d extends Frame {
 				) {
 					// Wert für die drehen Variable ändern
 					drehen = (drehen == false) ? true : false;
-					//gui neumalen
+					// gui neumalen
 					repaint();
 				}
 			}
@@ -161,11 +189,42 @@ public class Spielfeld2d extends Frame {
 				System.exit(0);
 			}
 		});
-		
+
+		this.setLayout(null);
+
+		this.add(chatSendenArea);
+		this.add(chatSenden);
+		this.add(chatArea);
+
+		chatArea.setBounds(815, 90, 300, 250);
+		chatArea.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		chatSendenArea.setBounds(815, 360, 175, 30);
+		chatSendenArea.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		chatSenden.setBounds(1000, 360, 120, 30);
+		chatSenden.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				ChatNachricht();
+			}
+		});
+
+	}
+	private void ChatNachricht() {
+		if(this.chatSendenArea.getText() != null) {
+			try {
+				remote.chatMessage("Spieler " + this.spielerNummer +":"+ this.chatSendenArea.getText() );
+				//System.out.println("Spieler " + this.spielerNummer +":"+ this.chatSendenArea.getText());
+				this.chatSendenArea.setText("");
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	/**
-	 * Diese Funktion erlaubt es dem Client schiffe
-	 * zu setzen
+	 * Diese Funktion erlaubt es dem Client schiffe zu setzen
 	 */
 	public void startPlaceingShips() {
 		setzeSchiffe = true;
@@ -175,13 +234,15 @@ public class Spielfeld2d extends Frame {
 	/**
 	 * Diese Funktion setzt Schiffe auf dem Spielfeld.
 	 * 
-	 * @param x X-Mausposition
-	 * @param y Y-Mausposition
+	 * @param x
+	 *            X-Mausposition
+	 * @param y
+	 *            Y-Mausposition
 	 */
-	private void setShips(int x, int y) {
+	private synchronized void setShips(int x, int y) {
 		// Innerhalb des 1. Spielfeldes
 		if (x > 450 && x < 750 && y > 90 && y < 390) {
-			//Position auf dem Spielfeld ermitteln
+			// Position auf dem Spielfeld ermitteln
 			int posX = Math.floorDiv(x - 450, 30);
 			int posY = Math.floorDiv(y - 90, 30);
 			// Wie "lang" ist das Schiff
@@ -210,7 +271,7 @@ public class Spielfeld2d extends Frame {
 					return;
 				}
 			}
-			
+
 			// Wenn das Schiff gesetzt werden kann setze es.
 			if (drehen) {
 				if (posX + anzahl <= 10) {
@@ -227,7 +288,8 @@ public class Spielfeld2d extends Frame {
 			}
 			// Gesetzte Schiffe reduzieren.
 			anzahlschiffe--;
-			// Wenn alle Schiffe gesetzt wurden dann "beende" das Schiffe setzen.
+			// Wenn alle Schiffe gesetzt wurden dann "beende" das Schiffe
+			// setzen.
 			if (anzahlschiffe == 0) {
 				setzeSchiffe = false;
 			}
@@ -243,7 +305,7 @@ public class Spielfeld2d extends Frame {
 	 * @param x
 	 * @param y
 	 */
-	public void getMouseKlickAction(int x, int y) {
+	public synchronized void getMouseKlickAction(int x, int y) {
 		if (x > 60 && x < 360 && y > 90 && y < 390) {
 			int posX = Math.floorDiv(x, 30) - 2;
 			int posY = Math.floorDiv(y, 30) - 3;
@@ -256,6 +318,7 @@ public class Spielfeld2d extends Frame {
 			}
 		}
 	}
+
 	/**
 	 * 
 	 * @param p
@@ -263,6 +326,7 @@ public class Spielfeld2d extends Frame {
 	public void setSpielzuege1(int p[][]) {
 		this.spielfeld1 = p;
 	}
+
 	/**
 	 * 
 	 * @param p
@@ -270,6 +334,7 @@ public class Spielfeld2d extends Frame {
 	public void setSpielzuege2(int p[][]) {
 		this.spielfeld2 = p;
 	}
+
 	/**
 	 * 
 	 */
@@ -282,6 +347,7 @@ public class Spielfeld2d extends Frame {
 		 * spielfeld2[p.x][p.y] = 1; }
 		 **/
 	}
+
 	/**
 	 * 
 	 * @param x
@@ -319,8 +385,10 @@ public class Spielfeld2d extends Frame {
 		}
 		//
 	}
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.Window#paint(java.awt.Graphics)
 	 */
 	public void paint(Graphics g) {
@@ -332,6 +400,14 @@ public class Spielfeld2d extends Frame {
 		g.drawLine(400, 20, 400, 415);
 		g.drawLine(402, 20, 402, 415);
 		g.drawLine(404, 20, 404, 415);
+
+		g.setColor(Color.black);
+		g.drawLine(780, 20, 780, 415);
+		g.drawLine(782, 20, 782, 415);
+		g.drawLine(784, 20, 784, 415);
+		g.drawLine(786, 20, 786, 415);
+		g.drawLine(788, 20, 788, 415);
+
 		g.setFont(new Font("Serif", Font.BOLD, 18));
 		g.drawString("Dein Spielfeld", 115, 30);
 		if (setzeSchiffe == true) {
@@ -343,9 +419,18 @@ public class Spielfeld2d extends Frame {
 				g.drawString("Du bist dran!", 100, 55);
 			} else {
 				g.setColor(Color.red);
-				g.drawString("Dein Herausforderer ist am Zug!", 90, 55);
+				g.drawString("Warte auf Gegner!", 90, 55);
 			}
 		}
+		
+		g.setFont(new Font("Serif", Font.BOLD, 18));
+		g.setColor(Color.red);
+		g.drawString("Chat!", 900, 55);
+		g.setFont(new Font("Serif", Font.BOLD, 12));
+		g.setColor(Color.red);
+		g.drawString("Du bist Spieler " + spielerNummer, 900, 80);
+		
+		
 		g.setColor(Color.black);
 		g.drawString("Dein Herausforderer", 500, 30);
 
@@ -412,14 +497,22 @@ public class Spielfeld2d extends Frame {
 							g.setColor(Color.orange);
 							g.fillRect(30 * lastX + 1, 30 * lastY + 1, 29, 29);
 							g.setColor(Color.white);
-							g.drawLine(30 * lastX + 1 + 10,	30 * lastY + 1 + 10, 30 * lastX + 1 + 20,lastY * 30 + 1 + 20);
-							g.drawLine(30 * lastX + 1 + 20,	30 * lastY + 1 + 10, 30 * lastX + 1 + 10,lastY * 30 + 1 + 20);
+							g.drawLine(30 * lastX + 1 + 10,
+									30 * lastY + 1 + 10, 30 * lastX + 1 + 20,
+									lastY * 30 + 1 + 20);
+							g.drawLine(30 * lastX + 1 + 20,
+									30 * lastY + 1 + 10, 30 * lastX + 1 + 10,
+									lastY * 30 + 1 + 20);
 						} else {
 							g.setColor(Color.red);
 							g.fillRect(startX + i + 1, startY + j + 1, 29, 29);
 							g.setColor(Color.white);
-							g.drawLine(startX + i + 1 + 10, startY + j + 1 + 10, startX	+ i + 1 + 20, startY + j + 1 + 20);
-							g.drawLine(startX + i + 1 + 20, startY + j + 1 + 10, startX + i + 1 + 10, startY + j + 1 + 20);
+							g.drawLine(startX + i + 1 + 10,
+									startY + j + 1 + 10, startX + i + 1 + 20,
+									startY + j + 1 + 20);
+							g.drawLine(startX + i + 1 + 20,
+									startY + j + 1 + 10, startX + i + 1 + 10,
+									startY + j + 1 + 20);
 						}
 					}
 				}
@@ -508,16 +601,18 @@ public class Spielfeld2d extends Frame {
 						g.setColor(Color.red);
 						g.fillRect(lstartX + i + 1, startY + j + 1, 29, 29);
 						g.setColor(Color.black);
-						g.drawLine(lstartX + i + 1 + 10, startY + j + 1 + 10, lstartX	+ i + 1 + 20, startY + j + 1 + 20);
-						g.drawLine(lstartX + i + 1 + 20, startY + j + 1 + 10, lstartX + i + 1 + 10, startY + j + 1 + 20);
+						g.drawLine(lstartX + i + 1 + 10, startY + j + 1 + 10,
+								lstartX + i + 1 + 20, startY + j + 1 + 20);
+						g.drawLine(lstartX + i + 1 + 20, startY + j + 1 + 10,
+								lstartX + i + 1 + 10, startY + j + 1 + 20);
 					}
 				}
 			}
 		}
-
+		// Chat-GUI am "Ende" zeichnen
+		super.paint(g);
 	}
 
-	
 	/**
 	 * 
 	 * @return ArrayList<Point>
@@ -525,6 +620,7 @@ public class Spielfeld2d extends Frame {
 	public ArrayList<Point> getSpielzuege2() {
 		return spielzuege2;
 	}
+
 	/**
 	 * 
 	 * @param spielzuege2
@@ -532,6 +628,7 @@ public class Spielfeld2d extends Frame {
 	public void setSpielzuege2(ArrayList<Point> spielzuege2) {
 		this.spielzuege2 = spielzuege2;
 	}
+
 	/**
 	 * 
 	 * @return
@@ -539,6 +636,7 @@ public class Spielfeld2d extends Frame {
 	public int getSpielerNummer() {
 		return spielerNummer;
 	}
+
 	/**
 	 * 
 	 * @param spielerNummer
@@ -546,6 +644,7 @@ public class Spielfeld2d extends Frame {
 	public void setSpielerNummer(int spielerNummer) {
 		this.spielerNummer = spielerNummer;
 	}
+
 	/**
 	 * 
 	 * @return
@@ -553,6 +652,7 @@ public class Spielfeld2d extends Frame {
 	public Point getSpielzug() {
 		return spielzug;
 	}
+
 	/**
 	 * 
 	 * @param spielzug
@@ -560,6 +660,7 @@ public class Spielfeld2d extends Frame {
 	public void setSpielzug(Point spielzug) {
 		this.spielzug = spielzug;
 	}
+
 	/**
 	 * 
 	 * @return boolean
@@ -567,6 +668,7 @@ public class Spielfeld2d extends Frame {
 	public boolean isSpielzugdone() {
 		return spielzugdone;
 	}
+
 	/**
 	 * 
 	 * @param spielzugdone
@@ -574,13 +676,15 @@ public class Spielfeld2d extends Frame {
 	public void setSpielzugdone(boolean spielzugdone) {
 		this.spielzugdone = spielzugdone;
 	}
+
 	/**
 	 * 
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public boolean isSettingships() {
 		return settingships;
 	}
+
 	/**
 	 * 
 	 * @param settingships
@@ -588,5 +692,12 @@ public class Spielfeld2d extends Frame {
 	 */
 	public void setSettingships(boolean settingships) {
 		this.settingships = settingships;
+	}
+
+	public void setChatNachrichten(ArrayList<String> nachrichten) {
+		this.chatArea.setText("");
+		for (String s : nachrichten) {
+			chatArea.append(s + "\n");
+		}
 	}
 }

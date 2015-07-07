@@ -5,6 +5,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+
+import java.util.ArrayList;
+
 /**
  * GUI und ServerInterface importieren.
  */
@@ -34,11 +37,12 @@ public class SchiffeversenkenClient {
 		Registry registry = null;
 		ServerInterface remote = null;
 		int p[][][] = null;
+		
 		try {
-			registry = LocateRegistry.getRegistry("localhost",
+			registry = LocateRegistry.getRegistry("141.72.113.122",
 					Constant.RMI_PORT);
 			remote = (ServerInterface) registry.lookup(Constant.RMI_ID);
-			sp = new Spielfeld2d();
+			sp = new Spielfeld2d(remote);
 			// Spieler nummer vom Server holen
 			int spielernr = remote.registerNewPlayer();
 			System.out.println("Spieler" + spielernr);
@@ -46,8 +50,41 @@ public class SchiffeversenkenClient {
 				System.out.println("No way dude");
 				System.exit(404);
 			}
+			
+			
 			sp.setSpielerNummer(spielernr);
+			Thread t  = new Thread() {
+	            private ServerInterface rem = null;
+	            private Spielfeld2d sp = null;
+	            Thread init(ServerInterface remo,Spielfeld2d spiel){
 
+	                this.rem = remo;
+	                this.sp = spiel;
+	                return this;
+	            }
+
+	            public void run(){
+	                while(true) {
+	            	try {
+						ArrayList<String> nachrichten = rem.getChatMessages();
+					
+							if(nachrichten.size() != sp.chatNachrichten.size()) {
+								sp.setChatNachrichten(nachrichten);
+							}
+					
+						
+						Thread.sleep(500);
+					} catch (RemoteException | InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            		
+	                }
+	                
+	            }
+	        }.init(remote,sp);
+			t.start();
+			
 			// Auf 2 Spieler warten
 			System.out.println("Warte auf andere Spieler....");
 			while (true) {
