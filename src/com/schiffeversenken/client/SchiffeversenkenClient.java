@@ -39,7 +39,7 @@ public class SchiffeversenkenClient {
 		int p[][][] = null;
 		
 		try {
-			registry = LocateRegistry.getRegistry("141.72.113.122",
+			registry = LocateRegistry.getRegistry("192.168.43.248",
 					Constant.RMI_PORT);
 			remote = (ServerInterface) registry.lookup(Constant.RMI_ID);
 			sp = new Spielfeld2d(remote);
