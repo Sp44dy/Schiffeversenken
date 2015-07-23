@@ -128,11 +128,9 @@ public class Spielfeld2d extends Frame {
 	 * Konstruktor für das Spielfeld. Dieser initalisiert alle Arrays und
 	 * ArrayList-Variabeln, sowie erstellt alle nötigen Listener welche für die
 	 * Gui benötigt werden.
-	 * 
-	 * @param none
-	 * @return none
-	 * @throws NotBoundException
-	 * @throws RemoteException
+	 *
+	 * @throws NotBoundException  Weitergabe entsprechender Fehlermeldungen 
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	public Spielfeld2d() throws RemoteException, NotBoundException {
 		// Konstruktor des Frames
@@ -227,8 +225,8 @@ public class Spielfeld2d extends Frame {
 	 * Sollte die Maximale Anzahl clients schon verbunden sein wird das
 	 * Programm beendet.
 	 * 
-	 * @throws RemoteException
-	 * @throws NotBoundException
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
+	 * @throws NotBoundException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	public void connect() throws RemoteException, NotBoundException {
 		//RMI starten & Binden
@@ -362,8 +360,8 @@ public class Spielfeld2d extends Frame {
 	 * für das "schießen". Sendet ggf. an den Server
 	 * den "neuen" Spielzug.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x X-Koordinate
+	 * @param y Y-Koordinate
 	 */
 
 	public void getMouseKlickAction(int x, int y) {
@@ -686,7 +684,6 @@ public class Spielfeld2d extends Frame {
 	/**
 	 * Erlaubt das Setzen von Schiffen
 	 * 
-	 * @return void
 	 */
 	public void setzeSchiffe() {
 		this.setzeSchiffe = true;
@@ -695,7 +692,7 @@ public class Spielfeld2d extends Frame {
 	/**
 	 * Fügt eine Chat Nachricht hinzu
 	 * 
-	 * @param msg
+	 * @param msg Chat-Nachricht
 	 */
 	public void setChatNachricht(String msg) {
 		chatArea.append(msg);
@@ -704,7 +701,7 @@ public class Spielfeld2d extends Frame {
 	/**
 	 * Setzt einen Status in die GUI
 	 * 
-	 * @param status
+	 * @param status Status
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -713,7 +710,7 @@ public class Spielfeld2d extends Frame {
 	/**
 	 * Setzt die Spielernummer
 	 * 
-	 * @param nummer
+	 * @param nummer Spielernummer
 	 */
 	public void setSpielernummer(int nummer) {
 		this.spielerNummer = nummer;

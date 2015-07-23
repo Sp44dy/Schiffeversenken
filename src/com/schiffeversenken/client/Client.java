@@ -32,8 +32,8 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
 	 * und das Spielfeld initialisiert, sowie die Verbindung mit 
 	 * dem Server herstellt
 	 * 
-	 * @throws RemoteException
-	 * @throws NotBoundException
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
+	 * @throws NotBoundException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	public Client() throws RemoteException, NotBoundException {
 		super();
@@ -46,19 +46,17 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
 
 	/**
 	 * Client Hauptklasse. Diese erzeugt eine neue Instanz der Client Klasse.
-	 * @param args
-	 * @throws RemoteException
-	 * @throws NotBoundException
-	 * @throws InterruptedException
+	 * @param args Parameter der Konsole
 	 */
-	public static void main(String[] args) throws NotBoundException {
+	public static void main(String[] args)  {
 		try {
 			new Client();
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		} finally {
-
+		} catch (NotBoundException e ) {
+			e.printStackTrace();
 		}
+		
 	}
 
 	/*

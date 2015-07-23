@@ -63,7 +63,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 * Konstruktor für die Klasse ServerImpl. Es werden alle wichtigen variabeln
 	 * initialsiert.
 	 * 
-	 * @throws RemoteException
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	protected ServerImpl() throws RemoteException {
 		super();

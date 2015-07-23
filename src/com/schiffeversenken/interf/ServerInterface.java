@@ -24,7 +24,6 @@ public interface ServerInterface extends Remote {
 	 *            Koordinate des durchzufuehrenden Spielzuges
 	 * @param player
 	 *            Spielernummer der den Zug durchführt
-	 * @return Das neue Spielfeld mit dem uebermittelten Spielzug
 	 * @throws RemoteException
 	 *             Weitergabe entsprechender Fehlermeldungen
 	 */
@@ -36,7 +35,8 @@ public interface ServerInterface extends Remote {
 	 * @param player
 	 *            Spielernummer
 	 * @return Gibt ein int Arry mit dem Spielfeld zurück
-	 * @throws RemoteException
+	 * @throws RemoteException Weitergabe entsprechender Fehlermeldungen
+	 * 
 	 */
 	public int[][][] getSpielzuege(int player) throws RemoteException;
 
@@ -47,7 +47,7 @@ public interface ServerInterface extends Remote {
 	 *            ArrayList mit den Schiffspositionen
 	 * @param spieler
 	 *            Spielernummer
-	 * @throws RemoteException
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	public void setShips(ArrayList<Point> ship, int spieler)
 			throws RemoteException;
@@ -58,15 +58,15 @@ public interface ServerInterface extends Remote {
 	 * 
 	 * @param nachricht
 	 *            Nachricht die gesendet werden soll.
-	 * @throws RemoteException
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	public void sendChatMessage(String nachricht) throws RemoteException;
 
 	/**
 	 * Registriert einen neuen Spieler (maximal 2)
 	 * 
-	 * @param inter
-	 * @throws RemoteException
+	 * @param inter ClientInterface des Clients
+	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	public void login(ClientInterface inter) throws RemoteException;
 

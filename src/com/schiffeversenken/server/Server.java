@@ -19,7 +19,7 @@ public class Server {
 	/**
 	 * Hauptklasse für den Server.
 	 * Registriert RMI
-	 * @param args
+	 * @param args Parameter der Konsole 
 	 */
 	public static void main(String[] args)  {
 		// Server starten ggf. Exception fangen
