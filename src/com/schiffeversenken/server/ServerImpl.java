@@ -2,20 +2,23 @@ package com.schiffeversenken.server;
 
 import com.schiffeversenken.interf.*;
 
-import java.awt.Point;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
 import java.util.ArrayList;
+import java.awt.Point;
 
 /**
- * Diese Klasse gibt das Spielfeld für die Clients aus, sowie handhabt die
- * eingaben des Clients und entscheidet eigenständig wer gewonnen hat.
+ * Diese Klasse berechnet das Spielfeld für die Clients, sowie handhabt die
+ * eingaben des Clients und entscheidet eigenständig wer gewonnen hat. Zusätzlich
+ * steht ein Chat zur verfügung.
  * 
  * @author Benedict Kohls {@literal <bkohls91@gmail.com>}
  * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
  *
  */
-@SuppressWarnings("serial")
+
 public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	/**
 	 * Spielzuege von Spieler 1
@@ -54,6 +57,24 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 */
 	private ArrayList<String> chat;
 
+	private ClientInterface[] clients;
+
+	/**
+	 * Konstruktor für die Klasse ServerImpl. Es werden alle wichtigen variabeln
+	 * initialsiert.
+	 * 
+	 * @throws RemoteException
+	 */
+	protected ServerImpl() throws RemoteException {
+		super();
+		spieler1 = new ArrayList<Point>();
+		spieler2 = new ArrayList<Point>();
+		chat = new ArrayList<String>();
+		clients = new ClientInterface[2]; // 2 Clients erlauben
+		runde = 0;
+		spieler = 0;
+	}
+
 	/**
 	 * Setzt die Schiffe die vom Client an den Server uebertragen wurden.
 	 * 
@@ -75,20 +96,11 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		}
 		// Spielfeld neu berechnen
 		calcSpielfeld(spieler);
-	}
-
-	/**
-	 * Konstruktor für die Klasse ServerImpl. Es werden alle wichtigen variabeln
-	 * initialsiert.
-	 * 
-	 * @throws RemoteException
-	 */
-	protected ServerImpl() throws RemoteException {
-		super();
-		spieler1 = new ArrayList<Point>();
-		spieler2 = new ArrayList<Point>();
-		chat = new ArrayList<String>();
-		runde = 0;
+		// Spiel starten!
+		if (gameStarted()) {
+			// Den richtigen Client sagen das er starten darf
+			setNextRound();
+		}
 	}
 
 	/*
@@ -98,17 +110,31 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 * com.schiffeversenken.interf.ServerInterface#chatMessage(java.lang.String)
 	 */
 	public void chatMessage(String nachricht) throws RemoteException {
+		//Chatnachricht hinzufuegen
 		this.chat.add(nachricht);
-		System.out.println(nachricht);
+		
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.schiffeversenken.interf.ServerInterface#getChatMessages()
+	/**
+	 * Teilt den Clients mit ob diese am Zug sind oder nicht.
 	 */
-	public ArrayList<String> getChatMessages() throws RemoteException {
-		return this.chat;
+	private void setNextRound() {
+		try {
+			//Spieler 1 ist dran
+			if (this.getNextPlayer() == 1) {
+				this.clients[0].allowSpielzug();
+				this.clients[1].waitForSpieler();
+				
+			} else {
+				//Spieler 2 ist am Zug
+				this.clients[1].allowSpielzug();
+				this.clients[0].waitForSpieler();
+			}
+			//Clients die Spielzuege uebermitteln 
+			this.clients[0].setSpielzuege(this.getSpielzuege(1));
+			this.clients[1].setSpielzuege(this.getSpielzuege(2));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -143,6 +169,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 				spielfeld2[p.x][p.y] = 1;
 			}
 		}
+		
+		
 	}
 
 	/*
@@ -150,7 +178,6 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 * 
 	 * @see com.schiffeversenken.interf.ServerInterface#getNextPlayer()
 	 */
-	@Override
 	public int getNextPlayer() throws RemoteException {
 		// Runden die durch 2 teilbar sind (rest=0) sind für Spieler 2.
 		// Andere sind für Spieler 1.
@@ -169,20 +196,36 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 * int)
 	 */
 	@Override
-	public int[][][] doSpielzug(Point spielzug, int player)
-			throws RemoteException {
+	public void doSpielzug(Point spielzug, int player) throws RemoteException {
 		// Spielzug dem richtigen Spieler zuordnen
 		if (player == 1) {
 			this.spieler1.add(spielzug);
 		} else {
 			this.spieler2.add(spielzug);
 		}
+		
 		// nächste Runde einleiten
 		runde++;
+		
 		// Spielfeld neu berechnen
 		calcSpielfeld(player);
-		// Neues Spielfeld zurueck geben
-		return getSpielzuege(player);
+		
+		// Den Clients mitteilen was sache ist
+		setNextRound();
+		//prüfen ob jemand gewonnen hat
+				try {
+					int gSpieler = this.gewonnen();
+					if(gSpieler != 0 ) {
+						//Den Clients dies auch mitteilen!
+						sendChatMessage("Spiel: Es hat Spieler " + gSpieler + " gewonnen!!");
+						this.clients[0].gameEnde();
+						this.clients[1].gameEnde();
+					}
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+		
+		
 	}
 
 	/*
@@ -190,7 +233,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 * 
 	 * @see com.schiffeversenken.interf.ServerInterface#getSpielzuege(int)
 	 */
-	@Override
+
 	public int[][][] getSpielzuege(int player) throws RemoteException {
 		// Array initaliseren
 		int[][][] p = new int[2][][];
@@ -207,13 +250,11 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		return p;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.schiffeversenken.interf.ServerInterface#gameStarted()
+	/**
+	 * Gibt an ob alle Spieler die Schiffe gesetzt haben
+	 * @return Ja oder Nein
 	 */
-	@Override
-	public boolean gameStarted() throws RemoteException {
+	private boolean gameStarted() {
 		// Wenn beide Spieler die Schiffe gesetzt haben gehts los!
 		if (ships1 != null && ships2 != null)
 			return true;
@@ -221,31 +262,12 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 			return false;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Gibt die Spielernummer zurueck, welcher gewonnen hat
 	 * 
-	 * @see com.schiffeversenken.interf.ServerInterface#registerNewPlayer()
+	 * @return Niemand (0) oder Spielernummer
 	 */
-	@Override
-	public int registerNewPlayer() throws RemoteException {
-		// Mehr als 2 Spieler sind unzulässig
-		if (spieler == 2) {
-			return -1;
-		}
-		// Spieleranzahl erhöhen
-		spieler++;
-		// Spielernummer zurueckgeben
-		return spieler;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.schiffeversenken.interf.ServerInterface#gewonnen()
-	 */
-	@Override
-	public int gewonnen() throws RemoteException {
-
+	private int gewonnen()  {
 		int cntSpieler = 0;
 		int cnt = 0;
 		// Kontrolle ob Spieler 1 alle Schiffe von Spieler 2 getroffen hat
@@ -277,17 +299,56 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 
 	}
 
+
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.schiffeversenken.interf.ServerInterface#gameReady()
+	 * @see
+	 * com.schiffeversenken.interf.ServerInterface#sendChatMessage(java.lang
+	 * .String)
 	 */
 	@Override
-	public boolean gameReady() throws RemoteException {
-		// Wenn 2 Spieler da sind is das Spiel bereit
-		if (spieler == 2)
-			return true;
-		else
-			return false;
+	public void sendChatMessage(String nachricht) throws RemoteException {
+		nachricht = nachricht + "\n";
+		if (clients[0] != null)
+			this.clients[0].chatNachricht(nachricht);
+		if (clients[1] != null)
+			this.clients[1].chatNachricht(nachricht);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.schiffeversenken.interf.ServerInterface#login(com.schiffeversenken
+	 * .interf.ClientInterface)
+	 */
+	@Override
+	public synchronized void login(ClientInterface inter)
+			throws RemoteException {
+		//mehr als 2 Spieler nicht!
+		if (spieler == 2) {
+			inter.setSpielerNummer(-1);
+			return;
+		}
+		//Den CLient beim Server registrieren
+		this.clients[spieler] = inter;
+		// Spieleranzahl erhöhen
+		this.spieler++;
+		//Spielernumemr setzen
+		inter.setSpielerNummer(spieler);
+		//Auf andere Spieler warten
+		inter.waitForSpieler();
+		//Wenn 2 SPieler dann den Clients mitteilen
+		// das die Schiffe gesetzt werden können
+		if (this.spieler == 2) {
+			// Schiffe setzen
+			this.clients[0].settingships();
+			this.clients[1].settingships();
+		}
+
+		System.out.println("[DEBUG] Client " + this.spieler
+				+ " hat sich angemeldet");
 	}
 }

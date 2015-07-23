@@ -28,47 +28,7 @@ public interface ServerInterface extends Remote {
 	 * @throws RemoteException
 	 *             Weitergabe entsprechender Fehlermeldungen
 	 */
-	public int[][][] doSpielzug(Point spielzug, int player)
-			throws RemoteException;
-
-	/**
-	 * Diese Funktion gibt die Spielernummer des Spielers zurueck, welcher am
-	 * Zug ist.
-	 * 
-	 * @return Spielernummer
-	 * @throws RemoteException
-	 *             Weitergabe entsprechender Fehlermeldungen
-	 */
-	public int getNextPlayer() throws RemoteException;
-
-	/**
-	 * Registiriert einen neuen Spieler. Sollte die maximale Spieleanzahl
-	 * erreich sein gibt diese -1 zurück
-	 * 
-	 * @return Gibt die Spielernummer zurueck oder bei Fehler -1
-	 * @throws RemoteException
-	 *             Weitergabe entsprechender Fehlermeldungen
-	 */
-	public int registerNewPlayer() throws RemoteException;
-
-	/**
-	 * Gibt true zurueck wenn das Spiel gestartet werden kann , andern falls
-	 * wird false zurueckgegenem
-	 * 
-	 * @return true spiel gestartet, false nicht gestartet
-	 * @throws RemoteException
-	 *             Weitergabe entsprechender Fehlermeldungen
-	 */
-	public boolean gameStarted() throws RemoteException;
-
-	/**
-	 * Gibt die Spielernummer zuerck welcher Spieler gewonnen hat. Wenn das
-	 * Spiel noch nicht gewonnen ist gibt diese Funktion 0 zurueck.
-	 * 
-	 * @return Bei 0 hat keiner gewonnen, andernfalls die Spielernummer
-	 * @throws RemoteException
-	 */
-	public int gewonnen() throws RemoteException;
+	public void doSpielzug(Point spielzug, int player) throws RemoteException;
 
 	/**
 	 * Gibt die Spielzuege in anhängigkeit der Spielernummer zurück
@@ -78,7 +38,7 @@ public interface ServerInterface extends Remote {
 	 * @return Gibt ein int Arry mit dem Spielfeld zurück
 	 * @throws RemoteException
 	 */
-	int[][][] getSpielzuege(int player) throws RemoteException;
+	public int[][][] getSpielzuege(int player) throws RemoteException;
 
 	/**
 	 * Registriert die Schiffe beim Server.
@@ -93,25 +53,21 @@ public interface ServerInterface extends Remote {
 			throws RemoteException;
 
 	/**
-	 * Gibt zurueck ob 2 Spieler anwesend sind.
+	 * Sendet an den Server eine Chat-Nachricht. Dieser teil den Clients
+	 * die gesendete Nachricht anschließend mit.
 	 * 
-	 * @return Gibt zurück ob 2 Spieler da sind
+	 * @param nachricht
+	 *            Nachricht die gesendet werden soll.
 	 * @throws RemoteException
 	 */
-	public boolean gameReady() throws RemoteException;
+	public void sendChatMessage(String nachricht) throws RemoteException;
 
 	/**
-	 * Sendet an den Server eine Chat-Nachricht
+	 * Registriert einen neuen Spieler (maximal 2)
 	 * 
-	 * @param nachricht Nachricht die gesendet werden soll.
+	 * @param inter
 	 * @throws RemoteException
 	 */
-	public void chatMessage(String nachricht) throws RemoteException;
+	public void login(ClientInterface inter) throws RemoteException;
 
-	/**
-	 * Holt den Chatverlauf.
-	 * @return Gibt den Chatverlauf zurueck.
-	 * @throws RemoteException
-	 */
-	public ArrayList<String> getChatMessages() throws RemoteException;
 }
