@@ -141,7 +141,7 @@ public class Spielfeld2d extends Frame {
 		// ArrayListen initalisieren
 		spielzuege1 = new ArrayList<Point>();
 
-		// Fenser auf 800x425 setzen
+		// Fenser auf 1150x425 setzen
 		setSize(1150, 425);
 
 		allowSpielzug = false;

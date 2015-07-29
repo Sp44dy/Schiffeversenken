@@ -53,10 +53,12 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 */
 	private int spieler;
 	/**
-	 * 
+	 * Haelt die vorhandenen Chat-Nachrichten
 	 */
 	private ArrayList<String> chat;
-
+	/**
+	 * ClientInterfaces zur Kommunikation mit dem Client
+	 */
 	private ClientInterface[] clients;
 
 	/**
@@ -72,7 +74,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		spieler2 = new ArrayList<Point>();
 		// Chat initialisieren
 		chat = new ArrayList<String>();
-		//Clients Array fuer die Kommonikation st
+		//Clients Array fuer die Kommonikation reservieren
 		clients = new ClientInterface[2]; // 2 Clients erlauben
 		runde = 0;
 		spieler = 0;
@@ -85,8 +87,8 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 *            Liste mit den Positionen der Schiffe
 	 * @param spieler
 	 *            SPielernummer
-	 * @throws RemoteException
-	 *             Weiterleitung von Fehlermeldung
+	 * @throws RemoteException  Weiterleitung von Fehlermeldung
+	 *            
 	 */
 	@Override
 	public void setShips(ArrayList<Point> ship, int spieler)
