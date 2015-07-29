@@ -37,7 +37,9 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
 	 */
 	public Client() throws RemoteException, NotBoundException {
 		super();
+		//Spielfeld initalisieren
 		ui = new Spielfeld2d();
+		//den Client übergeben
 		ui.client = this;
 		// Anmelden!
 		ui.connect();
@@ -147,6 +149,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
 	 */
 	@Override
 	public void gameEnde() throws RemoteException {
+		//das Spiel beenden
 		ui.allowSpielzug = false;
 		ui.setStatus("Spiel Beendet");
 	}

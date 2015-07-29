@@ -216,6 +216,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		//pruefen ob jemand gewonnen hat
 				try {
 					int gSpieler = this.gewonnen();
+					// 0 bedeutet keiner hat gewonnen
 					if(gSpieler != 0 ) {
 						//Den Clients dies auch mitteilen!
 						sendChatMessage("Spiel: Es hat Spieler " + gSpieler + " gewonnen!!");
@@ -238,7 +239,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	public int[][][] getSpielzuege(int player) throws RemoteException {
 		// Array initaliseren
 		int[][][] p = new int[2][][];
-		// SPielfeld fuer Spieler 1
+		// Spielfeld fuer Spieler 1
 		if (player == 1) {
 			p[0] = spielfeld1;
 			p[1] = spielfeld2;
@@ -278,7 +279,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 				cntSpieler++;
 			}
 		}
-		// Wenn die alle Schiffe getroffen wurden hat Spieler 1 gewonnen
+		// Wenn alle Schiffe getroffen wurden hat Spieler 1 gewonnen
 		if (cnt == cntSpieler) {
 			return 1;
 		}
@@ -311,6 +312,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	 */
 	@Override
 	public void sendChatMessage(String nachricht) throws RemoteException {
+		// Die Chat-Nachricht beiden Clients mitteilen
 		nachricht = nachricht + "\n";
 		if (clients[0] != null)
 			this.clients[0].chatNachricht(nachricht);
