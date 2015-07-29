@@ -3,7 +3,7 @@ package com.schiffeversenken.interf;
 import java.rmi.*;
 
 /**
- * Interface für den Client, damit die benoetigten Methoden auch vom Server
+ * Interface fuer den Client, damit die benoetigten Methoden auch vom Server
  * implementiert werden. Alle funktionen geben eine Exception weiter, weshalb
  * diese beim Aufruf abgefangen werden sollten.
  * 
@@ -12,7 +12,7 @@ import java.rmi.*;
  */
 public interface ClientInterface extends Remote {
 	/**
-	 * Empfängt die Chatnachricht des Servers
+	 * Empfaengt die Chatnachricht des Servers
 	 * 
 	 * @param nachricht
 	 *            Text/Nachricht des Servers

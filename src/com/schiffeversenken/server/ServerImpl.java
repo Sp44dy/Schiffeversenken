@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.awt.Point;
 
 /**
- * Diese Klasse berechnet das Spielfeld für die Clients, sowie handhabt die
- * eingaben des Clients und entscheidet eigenständig wer gewonnen hat. Zusätzlich
- * steht ein Chat zur verfügung.
+ * Diese Klasse berechnet das Spielfeld fuer die Clients, sowie handhabt die
+ * eingaben des Clients und entscheidet eigenstaendig wer gewonnen hat. Zusaetzlich
+ * steht ein Chat zur verfuegung.
  * 
  * @author Benedict Kohls {@literal <bkohls91@gmail.com>}
  * @author Patrick Labisch {@literal <paul.florian09@gmail.com>}
@@ -60,16 +60,19 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	private ClientInterface[] clients;
 
 	/**
-	 * Konstruktor für die Klasse ServerImpl. Es werden alle wichtigen variabeln
+	 * Konstruktor fuer die Klasse ServerImpl. Es werden alle wichtigen variabeln
 	 * initialsiert.
 	 * 
 	 * @throws RemoteException  Weitergabe entsprechender Fehlermeldungen
 	 */
 	protected ServerImpl() throws RemoteException {
 		super();
+		//Felder der Spieler initialisieren
 		spieler1 = new ArrayList<Point>();
 		spieler2 = new ArrayList<Point>();
+		// Chat initialisieren
 		chat = new ArrayList<String>();
+		//Clients Array fuer die Kommonikation st
 		clients = new ClientInterface[2]; // 2 Clients erlauben
 		runde = 0;
 		spieler = 0;
@@ -103,11 +106,10 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.schiffeversenken.interf.ServerInterface#chatMessage(java.lang.String)
+	/**
+	 * Fuegt eine Chat-Nachricht hinzu
+	 * @param nachricht Nachricht
+	 * @throws RemoteException  Weiterleitung der Fehlermeldung
 	 */
 	public void chatMessage(String nachricht) throws RemoteException {
 		//Chatnachricht hinzufuegen
@@ -173,14 +175,13 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.schiffeversenken.interf.ServerInterface#getNextPlayer()
+	/**
+	 * Gibt zurueck welcher Spieler am Zug ist.
+	 * @return Spielernummer
 	 */
-	public int getNextPlayer() throws RemoteException {
-		// Runden die durch 2 teilbar sind (rest=0) sind für Spieler 2.
-		// Andere sind für Spieler 1.
+	protected int getNextPlayer() {
+		// Runden die durch 2 teilbar sind (rest=0) sind fuer Spieler 2.
+		// Andere sind fuer Spieler 1.
 		if (runde % 2 == 0) {
 			return 2;
 		} else {
@@ -204,7 +205,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 			this.spieler2.add(spielzug);
 		}
 		
-		// nächste Runde einleiten
+		// naechste Runde einleiten
 		runde++;
 		
 		// Spielfeld neu berechnen
@@ -212,7 +213,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		
 		// Den Clients mitteilen was sache ist
 		setNextRound();
-		//prüfen ob jemand gewonnen hat
+		//pruefen ob jemand gewonnen hat
 				try {
 					int gSpieler = this.gewonnen();
 					if(gSpieler != 0 ) {
@@ -237,16 +238,16 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 	public int[][][] getSpielzuege(int player) throws RemoteException {
 		// Array initaliseren
 		int[][][] p = new int[2][][];
-		// SPielfeld für Spieler 1
+		// SPielfeld fuer Spieler 1
 		if (player == 1) {
 			p[0] = spielfeld1;
 			p[1] = spielfeld2;
 		} else {
-			// Das Spielfeld für Spieler 2 ist gedreht!!!
+			// Das Spielfeld fuer Spieler 2 ist gedreht!!!
 			p[0] = spielfeld2;
 			p[1] = spielfeld1;
 		}
-		// Spielfeld zurückgeben
+		// Spielfeld zurueckgeben
 		return p;
 	}
 
@@ -283,7 +284,7 @@ public class ServerImpl extends UnicastRemoteObject implements ServerInterface {
 		}
 		cnt = 0;
 		cntSpieler = 0;
-		// Das selbe für Spieler 2 mit den Schiffen von Spieler 1
+		// Das selbe fuer Spieler 2 mit den Schiffen von Spieler 1
 		for (Point p : ships1) {
 			cnt++;
 			if (spieler2.contains(p)) {

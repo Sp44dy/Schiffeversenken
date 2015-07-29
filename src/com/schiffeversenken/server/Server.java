@@ -8,7 +8,7 @@ import java.rmi.registry.Registry;
 import com.schiffeversenken.interf.*;
 
 /**
- * Main Klasse für den Server. Hier wird RMI gestartet und an die Serverimpl. 
+ * Main Klasse fuer den Server. Hier wird RMI gestartet und an die Serverimpl. 
  * gebunden.
  * 
  * @author Benedict Kohls  {@literal <bkohls91@gmail.com>}
@@ -17,7 +17,7 @@ import com.schiffeversenken.interf.*;
  */
 public class Server {
 	/**
-	 * Hauptklasse für den Server.
+	 * Hauptklasse fuer den Server.
 	 * Registriert RMI
 	 * @param args Parameter der Konsole 
 	 */

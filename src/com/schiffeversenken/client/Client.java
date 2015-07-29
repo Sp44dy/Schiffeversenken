@@ -12,8 +12,8 @@ import com.schiffeversenken.gui.Spielfeld2d;
 import com.schiffeversenken.interf.*;
 
 /**
- * Diese Klasse ruft die GUI für den Schifferversenken-Client auf. Die Klasse
- * ist auch für die Verbindung mit dem RMI-Server zuständig. Der Server kann funktionen
+ * Diese Klasse ruft die GUI fuer den Schifferversenken-Client auf. Die Klasse
+ * ist auch fuer die Verbindung mit dem RMI-Server zustaendig. Der Server kann funktionen
  * dieser Klasse aufrufen.
  * 
  * 

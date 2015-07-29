@@ -18,7 +18,7 @@ import com.schiffeversenken.interf.Constant;
 import com.schiffeversenken.interf.ServerInterface;
 
 /**
- * Die Klasse ist für die Auswertung der Server Daten und das Zeichnen der Gui
+ * Die Klasse ist fuer die Auswertung der Server Daten und das Zeichnen der Gui
  * verantwortlich.
  * 
  * @author Benedict Kohls {@literal <bkohls91@gmail.com>}
@@ -64,7 +64,7 @@ public class Spielfeld2d extends Frame {
 	 */
 	private int spielfeld2[][];
 	/**
-	 * Spielzüge für das Linke Spielfeld
+	 * Spielzuege fuer das Linke Spielfeld
 	 */
 	private ArrayList<Point> spielzuege1;
 
@@ -73,7 +73,7 @@ public class Spielfeld2d extends Frame {
 	 */
 	private int spielerNummer;
 	/**
-	 * Erlauben iob Schiffe gesetzen werden dürfen
+	 * Erlauben iob Schiffe gesetzen werden duerfen
 	 */
 	public boolean setzeSchiffe;
 	/**
@@ -98,35 +98,35 @@ public class Spielfeld2d extends Frame {
 	 */
 	private final int ships[] = new int[] { 5, 4, 3, 2, 2, 1, 1, 1 };
 	/**
-	 * TextArea für Chat Nachrichten
+	 * TextArea fuer Chat Nachrichten
 	 */
 	private JTextArea chatArea = new JTextArea();
 	/**
-	 * Absenden-Button für den Chat
+	 * Absenden-Button fuer den Chat
 	 */
 	private JButton chatSenden = new JButton("Abesenden");
 	/**
-	 * TextArea für das schreiben von Chat Nachrichten
+	 * TextArea fuer das schreiben von Chat Nachrichten
 	 */
 	private JTextArea chatSendenArea = new JTextArea();
 
 	/**
-	 * Hält die Instanz des Servers fuer die Kommunikation
+	 * Haelt die Instanz des Servers fuer die Kommunikation
 	 */
 	private ServerInterface server = null;
 
 	/**
-	 * Hält die Instanz für den Client fuer die Kommunikation
+	 * Haelt die Instanz fuer den Client fuer die Kommunikation
 	 */
 	public ClientInterface client = null;
 	/**
-	 * Aktueller Status für die Ausgabe an den Client
+	 * Aktueller Status fuer die Ausgabe an den Client
 	 */
 	String status = null;
 
 	/**
-	 * Konstruktor für das Spielfeld. Dieser initalisiert alle Arrays und
-	 * ArrayList-Variabeln, sowie erstellt alle nötigen Listener welche für die
+	 * Konstruktor fuer das Spielfeld. Dieser initalisiert alle Arrays und
+	 * ArrayList-Variabeln, sowie erstellt alle nötigen Listener welche fuer die
 	 * Gui benötigt werden.
 	 *
 	 * @throws NotBoundException  Weitergabe entsprechender Fehlermeldungen 
@@ -149,27 +149,27 @@ public class Spielfeld2d extends Frame {
 
 		// Gui zeigen
 		setVisible(true);
-		// Hover für das Spielfeld
+		// Hover fuer das Spielfeld
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				paintSelection(e.getX(), e.getY());
 			}
 		});
-		// Listener für die Drehung beim Schiffe setzen
+		// Listener fuer die Drehung beim Schiffe setzen
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D'/** D-Taste **/
 				) {
-					// Wert für die drehen Variable ändern
+					// Wert fuer die drehen Variable aendern
 					drehen = (drehen == false) ? true : false;
 					// gui neumalen
 					repaint();
 				}
 			}
 		});
-		// Maus Klick für das Schiffe setzen
+		// Maus Klick fuer das Schiffe setzen
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -180,7 +180,7 @@ public class Spielfeld2d extends Frame {
 				}
 			}
 		});
-		// Listener für das Fenster schließen
+		// Listener fuer das Fenster schliessen
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
@@ -297,7 +297,7 @@ public class Spielfeld2d extends Frame {
 			int anzahl = ships[anzahlschiffe - 1];
 			// kontrolle ob der Punkt wo das Schiff gesetzt wird
 			// nicht bereits in Liste ist. Ansonsten funktion beeneden.
-			// Einmal für die drehung (vertikal) und einmal ohne (horizontal)
+			// Einmal fuer die drehung (vertikal) und einmal ohne (horizontal)
 			if (drehen) {
 				if (posX + anzahl <= 10) {
 					for (int l = 0; l < anzahl; l++) {
@@ -349,15 +349,15 @@ public class Spielfeld2d extends Frame {
 					e.printStackTrace();
 				}
 			}
-			// Dannach neu malen damit der User die änderungen gleich sieht!
+			// Dannach neu malen damit der User die aenderungen gleich sieht!
 			this.repaint();
 
 		}
 	}
 
 	/**
-	 * Listener für das erfassen des Mausklick 
-	 * für das "schießen". Sendet ggf. an den Server
+	 * Listener fuer das erfassen des Mausklick 
+	 * fuer das "schiessen". Sendet ggf. an den Server
 	 * den "neuen" Spielzug.
 	 * 
 	 * @param x X-Koordinate
@@ -387,7 +387,7 @@ public class Spielfeld2d extends Frame {
 	}
 
 	/**
-	 * Setzt die Spielzuege für das Spielfeld 1
+	 * Setzt die Spielzuege fuer das Spielfeld 1
 	 * @param p Spielfeld als 2D-Array
 	 */
 	public void setSpielzuege1(int p[][]) {
@@ -395,7 +395,7 @@ public class Spielfeld2d extends Frame {
 	}
 
 	/**
-	 * Setzt die Spielzuege für das Spielfeld 2
+	 * Setzt die Spielzuege fuer das Spielfeld 2
 	 * @param p Spielfeld als 2D-Array
 	 */
 	public void setSpielzuege2(int p[][]) {
@@ -404,7 +404,7 @@ public class Spielfeld2d extends Frame {
 
 	/**
 	 * Diese Listender Funktion ist fuer das malen des
-	 * Hover-Effektes für das Spielfeld zustaendig
+	 * Hover-Effektes fuer das Spielfeld zustaendig
 	 * @param x
 	 * @param y
 	 */
@@ -510,7 +510,7 @@ public class Spielfeld2d extends Frame {
 			g.drawLine(startX + i, startY, startX + i, endY);
 			g.drawLine(startX, startY + i, endX, startY + i);
 		}
-		// Hover effekte und treffer für Spiefeld 1
+		// Hover effekte und treffer fuer Spiefeld 1
 		for (int i = 0; i < 300; i = i + 30) {
 			for (int j = 0; j < 300; j = j + 30) {
 				// Koordinaten
@@ -690,7 +690,7 @@ public class Spielfeld2d extends Frame {
 	}
 
 	/**
-	 * Fügt eine Chat Nachricht hinzu
+	 * Fuegt eine Chat Nachricht hinzu
 	 * 
 	 * @param msg Chat-Nachricht
 	 */
